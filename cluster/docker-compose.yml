@@ -1,0 +1,52 @@
+version: "3.3"
+
+services:
+  nats-1:
+    image: nats:2.1.9-alpine
+    command: "-D -V --cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
+    volumes:
+      - ./../nats/nats-server.conf:/etc/nats/cluster.conf
+    env_file:
+      - .env
+
+  nats-2:
+    image: nats:2.1.9-alpine
+    command: "-D -V --cluster nats://0.0.0.0:6222"
+    volumes:
+      - ./../nats/nats-server.conf:/etc/nats/cluster.conf
+    env_file:
+      - .env
+
+
+  nats-3:
+    image: nats:2.1.9-alpine
+    command: "-D -V --cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
+    volumes:
+      - ./../nats/nats-server.conf:/etc/nats/cluster.conf
+    env_file:
+      - .env
+
+  nats-4:
+    image: nats:2.1.9-alpine
+    command: "-D -V --cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
+
+
+  pub_order_created:
+    build:
+      context: ../apps/publisher
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+      - NATS_URL=nats-1:4222
+
+  sub_order:
+    build:
+      context: ../apps/subscriber
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+      - NATS_URL=nats-4:4222
