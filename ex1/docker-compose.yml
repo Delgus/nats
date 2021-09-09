@@ -6,8 +6,8 @@ services:
     #command: "-D -V" # debug and trace messages
     volumes:
       - ./../nats/nats-server.conf:/etc/nats/nats-server.conf
-    #env_file:
-     # - .env
+    env_file:
+      - .env
 
   pub_order_created:
     build:
