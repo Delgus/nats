@@ -1,6 +1,6 @@
 # nats
 
-```bash
+```bash 
 cd ex1
 ```
 
@@ -14,8 +14,8 @@ scale subscribers to 3
 docker-compose up -d --scale --scale sub_order=3
 ```
 
-logs for all containers `sub_order`
-```bash`
+logs for all containers `sub_order`  
+```bash
 docker-compose logs -f sub_order
 ```
 
