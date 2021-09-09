@@ -35,17 +35,14 @@ docker-compose up -d --scale queue_sub_order=3
 
 logs for all containers `queue_sub_order`
 
-```bash`
+```bash
 docker-compose logs -f queue_sub_order
 ```
 
-only one instance get message
+only one instance get message  
 
 ```
 queue_sub_order_2    | 2021/09/09 11:23:36 get data  "Hello World" 
 queue_sub_order_1    | 2021/09/09 11:23:38 get data  "Hello World" 
-queue_sub_order_3    | 2021/09/09 11:23:40 get data  "Hello World" 
-queue_sub_order_1    | 2021/09/09 11:23:42 get data  "Hello World" 
-queue_sub_order_1    | 2021/09/09 11:23:44 get data  "Hello World" 
-
+queue_sub_order_3    | 2021/09/09 11:23:40 get data  "Hello World"
 ```
