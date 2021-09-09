@@ -1,0 +1,44 @@
+version: "3.3"
+
+services:
+  nats:
+    image: nats:2.1.9-alpine
+    #command: "-D -V" # debug and trace messages
+    volumes:
+      - ./../nats/nats-server.conf:/etc/nats/nats-server.conf
+    #env_file:
+     # - .env
+
+  pub_order_created:
+    build:
+      context: ../apps/publisher
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+    depends_on:
+      - nats
+
+  sub_order:
+    build:
+      context: ../apps/subscriber
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+    depends_on:
+      - nats
+
+  queue_sub_order:
+    build:
+      context: ../apps/queuesubscriber
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+      - NATS_QUEUE=my_queue
+    depends_on:
+      - nats
