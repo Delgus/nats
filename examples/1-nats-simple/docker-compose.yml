@@ -1,0 +1,39 @@
+version: "3.3"
+
+services:
+  nats:
+    image: nats:2.1.9-alpine
+    volumes:
+      - ../../nats/nats-server.conf:/etc/nats/nats-server.conf
+    env_file:
+      - .env
+
+  pub_order:
+    build:
+      context: ../../src/publisher
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - nats
+    command: ["sleep", "1200s"]
+
+  sub_order:
+    build:
+      context: ../../src/subscriber
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - nats
+
+  queue_sub_order:
+    build:
+      context: ../../src/queuesubscriber
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_QUEUE=my_queue
+    depends_on:
+      - nats

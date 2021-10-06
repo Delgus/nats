@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+  nats-1:
+    image: nats:2.1.9-alpine
+    command: "-D -V --2-nats-cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
+    volumes:
+      - ./../nats/2-nats-cluster.conf:/etc/nats/nats-server.conf
+    env_file:
+      - .env
+
+  nats-2:
+    image: nats:2.1.9-alpine
+    command: "-D -V --2-nats-cluster nats://0.0.0.0:6222"
+    volumes:
+      - ./../nats/2-nats-cluster.conf:/etc/nats/nats-server.conf
+    env_file:
+      - .env
+
+  nats-3:
+    image: nats:2.1.9-alpine
+    command: "-D -V --2-nats-cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
+    volumes:
+      - ./../nats/2-nats-cluster.conf:/etc/nats/nats-server.conf
+    env_file:
+      - .env
+
+  pub_order:
+    build:
+      context: ../../src/publisher
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+      - NATS_URL=nats-1:4222
+    depends_on:
+      - nats-1
+
+  sub_order:
+    build:
+      context: ../../src/subscriber
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - NATS_SUBJECT=event.order.created
+      - NATS_URL=nats-3:4222
+    depends_on:
+      - nats-4
