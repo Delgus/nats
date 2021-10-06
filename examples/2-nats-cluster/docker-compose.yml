@@ -3,25 +3,22 @@ version: "3.3"
 services:
   nats-1:
     image: nats:2.1.9-alpine
-    command: "-D -V --2-nats-cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
     volumes:
-      - ./../nats/2-nats-cluster.conf:/etc/nats/nats-server.conf
+      - ../../nats/cluster-1.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 
   nats-2:
     image: nats:2.1.9-alpine
-    command: "-D -V --2-nats-cluster nats://0.0.0.0:6222"
     volumes:
-      - ./../nats/2-nats-cluster.conf:/etc/nats/nats-server.conf
+      - ../../nats/cluster-2.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 
   nats-3:
     image: nats:2.1.9-alpine
-    command: "-D -V --2-nats-cluster nats://0.0.0.0:6222 --routes nats://nats-2:6222"
     volumes:
-      - ./../nats/2-nats-cluster.conf:/etc/nats/nats-server.conf
+      - ../../nats/cluster-3.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 
@@ -36,6 +33,7 @@ services:
       - NATS_URL=nats-1:4222
     depends_on:
       - nats-1
+    command: ["sleep", "1200s"]
 
   sub_order:
     build:
@@ -47,4 +45,4 @@ services:
       - NATS_SUBJECT=event.order.created
       - NATS_URL=nats-3:4222
     depends_on:
-      - nats-4
+      - nats-3
