@@ -29,7 +29,7 @@ func main() {
 
 	sub, err := conn.Subscribe(subject, func(msg *stan.Msg) {
 		log.Printf("get data  %q \n", msg.Data)
-	})
+	}, stan.DurableName("durable_name_for_restart"))
 	if err != nil {
 		log.Fatal(err)
 	}
