@@ -1,4 +1,4 @@
-module ex1/app
+module publisher
 
 go 1.16
 

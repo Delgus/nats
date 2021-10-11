@@ -16,9 +16,6 @@ func main() {
 	subject := os.Getenv("NATS_SUBJECT")
 	queue := os.Getenv("NATS_QUEUE")
 
-	log.Println(natsURL, user, psw, subject, queue)
-
-	// Connect to NATS
 	nc, err := nats.Connect(natsURL, nats.UserInfo(user, psw))
 	if err != nil {
 		log.Fatal(err)
@@ -30,6 +27,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	defer nc.Close()
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT)

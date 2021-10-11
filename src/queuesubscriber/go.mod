@@ -1,4 +1,4 @@
-module ex1/app
+module queuesubscriber
 
 go 1.16
 

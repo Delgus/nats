@@ -1,4 +1,4 @@
-module ex1/app
+module subscriber
 
 go 1.16
 

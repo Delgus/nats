@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/stan.go"
 )
 
 func main() {
@@ -15,22 +15,26 @@ func main() {
 	user := os.Getenv("NATS_USERNAME")
 	psw := os.Getenv("NATS_PASSWORD")
 	subject := os.Getenv("NATS_SUBJECT")
+	clusterID := os.Getenv("NATS_STREAMING_CLUSTER_ID")
 
-	log.Println(natsURL, user, psw, subject)
-
-	// Connect to NATS
-	nc, err := nats.Connect(natsURL, nats.UserInfo(user, psw))
+	conn, err := stan.Connect(
+		clusterID,
+		"streaming_sub",
+		stan.NatsOptions(nats.UserInfo(user, psw)),
+		stan.NatsURL(natsURL),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	ticker := time.NewTicker(time.Second * 2)
-	for range ticker.C {
-		_, err := nc.Request(subject, []byte("Hello World"), time.Second * 1)
-		if err != nil {
-			log.Println(err)
-		}
+	sub, err := conn.Subscribe(subject, func(msg *stan.Msg) {
+		log.Printf("get data  %q \n", msg.Data)
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	defer sub.Close()
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT)

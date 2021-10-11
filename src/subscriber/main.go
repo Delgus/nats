@@ -14,13 +14,13 @@ func main() {
 	user := os.Getenv("NATS_USERNAME")
 	psw := os.Getenv("NATS_PASSWORD")
 	subject := os.Getenv("NATS_SUBJECT")
-	log.Println(natsURL, user, psw, subject)
 
-	// Connect to NATS
 	nc, err := nats.Connect(natsURL, nats.UserInfo(user, psw))
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	defer nc.Close()
 
 	_, err = nc.Subscribe(subject, func(msg *nats.Msg) {
 		log.Printf("get data  %q \n", msg.Data)

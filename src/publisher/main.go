@@ -12,8 +12,6 @@ func main() {
 	psw := os.Getenv("NATS_PASSWORD")
 	subject := os.Getenv("NATS_SUBJECT")
 
-	log.Println(natsURL, user, psw, subject)
-
 	nc, err := nats.Connect(natsURL, nats.UserInfo(user, psw))
 	if err != nil {
 		log.Fatal(err)

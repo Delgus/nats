@@ -4,7 +4,7 @@ services:
   nats:
     image: nats:2.1.9-alpine
     volumes:
-      - ../../nats/nats-server.conf:/etc/nats/nats-server.conf
+      - ./nats-server.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 

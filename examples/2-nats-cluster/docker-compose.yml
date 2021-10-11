@@ -4,21 +4,21 @@ services:
   nats-1:
     image: nats:2.1.9-alpine
     volumes:
-      - ../../nats/cluster-1.conf:/etc/nats/nats-server.conf
+      - ./cluster-1.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 
   nats-2:
     image: nats:2.1.9-alpine
     volumes:
-      - ../../nats/cluster-2.conf:/etc/nats/nats-server.conf
+      - ./cluster-2.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 
   nats-3:
     image: nats:2.1.9-alpine
     volumes:
-      - ../../nats/cluster-3.conf:/etc/nats/nats-server.conf
+      - ./nats/cluster-3.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 

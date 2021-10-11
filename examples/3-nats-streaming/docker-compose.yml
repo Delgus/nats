@@ -1,0 +1,28 @@
+version: "3.3"
+
+services:
+  nats-streaming:
+    image: nats-streaming:0.21.1-alpine
+    command: "-sc /etc/stan/config/streaming.conf"
+    volumes:
+      - "./streaming.conf:/etc/stan/config/streaming.conf"
+    env_file:
+      - .env
+
+  pub_order:
+    build:
+      context: ../../src/streaming-pub
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - nats-streaming
+
+  sub_order:
+    build:
+      context: ../../src/streaming-sub
+      dockerfile: ../../src/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - nats-streaming
