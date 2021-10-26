@@ -37,8 +37,6 @@ func main() {
 	defer sub.Close()
 
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT)
-	signal.Notify(c, syscall.SIGTERM)
-
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-c
 }

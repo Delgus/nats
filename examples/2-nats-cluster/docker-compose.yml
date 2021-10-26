@@ -18,7 +18,7 @@ services:
   nats-3:
     image: nats:2.1.9-alpine
     volumes:
-      - ./nats/cluster-3.conf:/etc/nats/nats-server.conf
+      - ./cluster-3.conf:/etc/nats/nats-server.conf
     env_file:
       - .env
 
@@ -29,11 +29,9 @@ services:
     env_file:
       - .env
     environment:
-      - NATS_SUBJECT=event.order.created
       - NATS_URL=nats-1:4222
     depends_on:
       - nats-1
-    command: ["sleep", "1200s"]
 
   sub_order:
     build:
@@ -42,7 +40,6 @@ services:
     env_file:
       - .env
     environment:
-      - NATS_SUBJECT=event.order.created
       - NATS_URL=nats-3:4222
     depends_on:
       - nats-3

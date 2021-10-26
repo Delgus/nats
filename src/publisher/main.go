@@ -1,9 +1,12 @@
 package main
 
 import (
-	"github.com/nats-io/nats.go"
 	"log"
 	"os"
+	"strconv"
+	"time"
+
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -17,13 +20,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("sending message")
+	defer nc.Close()
 
-	err = nc.Publish(subject, []byte("Hello World"))
-	if err != nil {
-		log.Fatal(err)
+	var number int
+
+	ticker := time.NewTicker(time.Second * 5)
+
+	for range ticker.C {
+		number++
+
+		err = nc.Publish(subject, []byte("nats_message_"+strconv.Itoa(number)))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
-
-	// don't forget close connection !!!
-	nc.Close()
 }

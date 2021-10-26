@@ -21,18 +21,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = nc.QueueSubscribe(subject, queue, func(msg *nats.Msg) {
+	defer nc.Close()
+
+	sub, err := nc.QueueSubscribe(subject, queue, func(msg *nats.Msg) {
 		log.Printf("get data  %q \n", msg.Data)
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer nc.Close()
+	defer sub.Unsubscribe()
 
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT)
-	signal.Notify(c, syscall.SIGTERM)
-
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-c
 }

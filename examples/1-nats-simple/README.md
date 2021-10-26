@@ -1,17 +1,10 @@
-# Example 1
+# Example
 
-start with one subscriber, one queuesubscriber and publisher
 ```bash
-docker-compose up -d --build
+docker-compose up -d --scale sub_order=3 --scale queue_sub_order=3 --build
 ```
 
 ### Subscribe
-
-scale subscribers to 3
-
-```bash
-docker-compose up -d --scale sub_order=3
-```
 
 logs for all containers `sub_order`  
 
@@ -19,38 +12,20 @@ logs for all containers `sub_order`
 docker-compose logs -f sub_order
 ```
 
-publish message
-
-```bash
-docker-compose exec pub_order ./app
-```
-
 all services get message
 
 ```
-sub_order_2          | 2021/09/09 11:21:22 get data  "Hello World" 
-sub_order_1          | 2021/09/09 11:21:22 get data  "Hello World" 
-sub_order_3          | 2021/09/09 11:21:22 get data  "Hello World" 
+sub_order_1        | 2021/10/26 07:21:12 get data  "nats_message_15" 
+sub_order_3        | 2021/10/26 07:21:12 get data  "nats_message_15" 
+sub_order_2        | 2021/10/26 07:21:12 get data  "nats_message_15"  
 ```
 
 ### QueueSubscribe
-
-scale queue subscribers to 3
-
-```bash
-docker-compose up -d --scale queue_sub_order=3
-```
 
 logs for all containers `queue_sub_order`
 
 ```bash
 docker-compose logs -f queue_sub_order
-```
-
-publish message
-
-```bash
-docker-compose exec pub_order ./app
 ```
 
 only one instance get message
@@ -61,12 +36,6 @@ stopped service
 
 ```bash
 docker-compose stop sub_order
-```
-
-publish message
-
-```bash
-docker-compose exec pub_order ./app
 ```
 
 started service

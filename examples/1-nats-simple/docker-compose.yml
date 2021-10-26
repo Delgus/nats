@@ -16,7 +16,6 @@ services:
       - .env
     depends_on:
       - nats
-    command: ["sleep", "1200s"]
 
   sub_order:
     build:

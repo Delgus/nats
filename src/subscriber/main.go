@@ -22,16 +22,16 @@ func main() {
 
 	defer nc.Close()
 
-	_, err = nc.Subscribe(subject, func(msg *nats.Msg) {
+	sub, err := nc.Subscribe(subject, func(msg *nats.Msg) {
 		log.Printf("get data  %q \n", msg.Data)
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT)
-	signal.Notify(c, syscall.SIGTERM)
+	defer sub.Unsubscribe()
 
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-c
 }

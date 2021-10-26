@@ -30,11 +30,5 @@ logs for all containers `sub_order`
 docker-compose logs -f sub_order
 ```
 
-Publish message
-
-```bash
-docker-compose exec pub_order ./app
-```
-
 Service get message
 

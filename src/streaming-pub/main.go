@@ -27,6 +27,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	defer conn.Close()
+
 	var number int
 
 	ticker := time.NewTicker(time.Second * 5)
@@ -39,7 +41,4 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-
-	// don't forget close connection !!!
-	conn.Close()
 }
